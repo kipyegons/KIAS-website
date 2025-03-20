@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KIAS E-learning Portal</title>
+    <style>
+       body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://th.bing.com/th?id=OIP.ZGweyNU8deuF727d2nNMUQHaEK&w=333&h=187&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2');
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        .top-dashboard {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      height: 60px;
+    }
+    .top-dashboard button {
+      background-color: white;
+      color: #4CAF50;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+    .top-dashboard button:hover {
+      background-color: #45a049;
+      color: white;
+    }
+    .content-container {
+      flex-grow: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .content-section {
+      display: none;
+    }
+    .content-section.active {
+      display: block;
+    }
+    .vertical-list {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .vertical-list button {
+      margin-bottom: 10px;
+    }
+        h1 {
+            color: #11185e;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #333;
+        }
+        input[type="text"], input[type="password"], input[type="email"], input[type="date"], input[type="number"] {
+            width: 80%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #4d04d4;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #331f7a;
+            color: rgb(248, 246, 246);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #251268;
+        }
+        .options {
+            margin-top: 15px;
+        }
+        .options a {
+            color: #4CAF50;
+            text-decoration: none;
+            display: block;
+            margin-top: 5px;
+        }
+        .options a:hover {
+            text-decoration: underline;
+        }
+        .dashboard {
+            display: flex;
+            justify-content: start;
+            width: 100%;
+            position: static;
+            height: 100vh;
+            margin: 0;
+            align-content: start;
+        }
+        
+        
+        .sidebar {
+            width: 250px;
+            background-color: rgb(2, 20, 11);
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+            align-content: start;
+            justify-items: start;
+            flex-grow: 1;
+            height: 100vh;
+            position: absolute;
+            left: 0;
+            
+        }
+        .sidebar button {
+            background-color: #4011c4;
+            color: white;
+            border: none;
+            padding: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        .sidebar button:hover {
+            background-color: #eb0ba0;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: rgba(213, 211, 223, 0.8);
+            width: 10000px;
+            
+            color: rgb(16, 93, 226);
+            padding: 50px;
+            display: block;
+            flex-direction: column;
+            justify-content: right;
+            margin-left: 270px;
+            height: 1000vh;
+            position: fixed;
+        }
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #1021bb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            align-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            
+            right:0; 
+            top: 10px;
+        }
+        .profile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 10px;
+            right: 0;
+        }
+        .modal {
+      display: none; /* Hidden by default */
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+    .modal-header {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .modal-content {
+      margin-bottom: 10px;
+    }
+    .modal-content label {
+      display: block;
+      margin: 5px 0;
+    }
+    .modal-content input {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 15px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .modal-footer {
+      text-align: right;
+    }
+    .modal-footer button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .modal-footer button:hover {
+      background-color: #45a049;
+    }
+    .close-btn {
+      background-color: #a89998;
+    }
+    .close-btn:hover {
+      background-color: #dacbcb;
+    }
+    .overlay {
+      display: none; /* Hidden by default */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+        z-index:500;
+     }
+     .vertical-list { 
+        display: flex;
+         flex-direction: column;
+          padding: 0;
+           margin: 0;
+         }
+    .vertical-list 
+    .item {
+             margin-bottom: 10px; 
+             background-color: #4d0ff8;
+              padding: 10px;
+               border-radius: 5px; 
+            }
+         
+
+            .small-container {
+    width: 6cm;
+    height: 4cm;
+    padding: 10cm;
+    margin-bottom: 10px;
+    gap:2cm;
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: width 1.2s, height 1.2s, padding 1.2s;
+    display: flex;
+    grid-template-columns: repeat(3,100px);
+    grid-template-rows: repeat(2,100px);
+    justify-content: start;
+}
+.small-container.shrink:hover{
+    flex:3;
+}
+.small-container.shrink {
+    width: 4cm;
+    height: 3cm;
+    padding: 5px;
+    overflow: visible;
+    white-space: normal;
+    gap:1cm;
+}
+.shrunk{
+    transform: scale(0.5);
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+        
+    </style>
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.style.display = 'none';
+            });
+            document.getElementById(pageId).style.display = 'block';
+        }
+
+        function login() {
+            const regNo = document.getElementById('loginRegNo').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (regNo === 'Kipyegon' && password === 'Siele2064') {
+                showPage('dashboardPage');
+            } else {
+                alert('Student Not Found');
+            }
+        }
+
+        function createAccount() {
+            // Here you would handle account creation logic
+            alert('Account Creation Successful');
+            showPage('loginPage');
+        }
+
+        function updatePassword() {
+            alert('Password Changed Successfully');
+        }
+
+        function orderItem() {
+            alert('Item Successfully Ordered');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            showPage('loginPage');
+        });
+
+    </script>
+
+</head>
+<body>
+    <!-- Login Page -->
+     <div> </div>
+    <div id="loginPage" class="page container">
+        <img src="https://www.kias.ac.ke/wp-content/uploads/2019/07/kias-logo.png" alt="School Logo" style="width:90%;">
+        <h1>Kenya Institute of Applied Sciences</h1>
+        <h2>Student Learning Management system</h2>
+        <label for="loginRegNo">Registration Number:</label>
+        <input type="text" id="loginRegNo" required>
+        <label for="loginPassword">Password:</label>
+        <input type="password" id="loginPassword" required>
+        <button onclick="login()">Login</button>
+        <div class="options">
+            <a href="#" onclick="showPage('createAccountPage')">Create Account</a>
+            <a href="#">Forgot Password?</a>
+        </div>
+    </div>
+
+    <!-- Create Account Page -->
+    <div id="createAccountPage" class="page container" style="display:none;">
+        <h2>Create Account</h2>
+        <label for="fullName">Full Name:</label>
+        <input type="text" id="fullName" required>
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" required>
+        <label for="idNo">Identification Number:</label>
+        <input type="number" id="idNo" required>
+        <label for="course">Course Registered:</label>
+        <input type="text" id="course" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" required>
+        <label for="phone">Phone Number:</label>
+        <input type="text" id="phone" required>
+        <button onclick="createAccount()">Create Account;
+        <div class="options">;
+            
+        </div>
+    </div> <div class="content-details"> 
+    </p> 
+</body> <script>sidebar</script>
+</div><div id="content" class="content-display: none;"> <div class="content-details"> 
+
+<!-- Dashboard Page -->
+<div id="dashboardPage" class="page dashboard" style="display:none;">
+<div class="sidebar">
+
+    
+<div class="sidebar"></div><!DOCTYPE html>
+      <a href='#' onclick="showPage('sidebar')"></a>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal</title>
+    <style>
+ 
+    </style>
+</head>
+
+    
+</head>
+<body>
+    <div class="sidebar">
+        <img src="https://www.kias.ac.ke/wp-content/uploads/2019/07/kias-logo.png" alt="School Logo" style="width:100%;"> 
+        <h2>Kenya Institute of Applied Sciences</h2>
+        <button onclick="showContent('mylearning')">My Learning</button>
+        <button onclick="showContent('E-library')">E-Library</button>
+        <button onclick="showContent('Attendancerecords')">Attendance records</button>
+        <button onclick="showContent('upcomingevents')">Upcoming Events</button>
+        <button onclick="showContent('clubsenrolled')">Clubs Enrolled</button>
+        <button onclick="showContent('mysubmissions')">My submissions</button>
+        <button onclick="showContent('studentportal')">Student Portal</button>
+        <button onclick="showContent('changePassword')">Change Password</button>
+        <button onclick="showContent('signOut')">Sign Out</button>
+    </div>
+
+    <div class="content" id="content">
+        <!-- Content will be loaded here -->
+        <div id="mylearning" class="content-section">
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Sidebar</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Interactive Sidebar</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="small-container">
+            <button class="small-container" onclick="shrinkContainers('MATHEMATICS')">MATHEMATICS</button>
+            <button class="small-container" onclick="shrinkContainers('HOSPITAL ENGINEERING')">HOSPITAL ENGINEERING</button>
+            <button class="small-container" onclick="shrinkContainers('HUMAN ANATOMY AND PHYSIOLOGY')">HUMAN ANATOMY AND PHYSIOLOGY</button>
+            <button class="small-container" onclick="shrinkContainers('INFORMATION & COMMUNICATION TECHNOLOGY')">INFORMATION & COMMUNICATION TECHNOLOGY</button>
+            <button class="small-container" onclick="shrinkContainers('INDUSTRIAL ORGANIZATION MANAGEMENT')">INDUSTRIAL ORGANIZATION MANAGEMENT</button>
+            <button class="small-container" onclick="shrinkContainers('RESEARCH METHODS')">RESEARCH METHODS</button>
+        </div>
+        <div class="main-content" id="main-content">
+            <!-- Content will be loaded here -->
+        </div>
+        <script src="scripts.js"></script>
+    </body>
+    </html>
+    
+    <div class="main-content" id="main-content">
+        <!-- Content will be loaded here -->
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>
+
+        </div>
+        <div id="E-library" class="content-section" style="display:none;">
+            <h2>Information Update</h2>
+            <p>School to reopen for next semester on 7th January 2024. Ensure you have duly paid your fees.</p>
+        </div>
+        <div id="Attendancerecords" class="content-section" style="display:none;">
+            <h2>Fee</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Semester</th>
+                        <th>Fee Paid (Ksh)</th>
+                        <th>Fee Balance (Ksh)</th>
+                        <th>Next Semester Fee (Ksh)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>First Semester</td>
+                        <td>30,000</td>
+                        <td>5,000</td>
+                        <td>35,000</td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+        </div>
+        <div id="upcomingevents" class="content-section" style="display:none;">
+            <h2>Timetables</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Semester</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Course 1</td>
+                        <td>1</td>
+                        <td>9:00 AM - 11:00 AM</td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+        </div>
+        <body>
+            
+        
+        <div id="enrollUnit" class="clubsenrolled" style="display:none;">
+            <h2>Course Unit Registration</h2>
+            <p>Click on units to approve.</p>
+            <ul class="vertical-list">
+                <li> <button onclick="enrollUnit()">Debate club</button></li> 
+                <li><button onclick="enrollUnit()">Engineering club</button></li> 
+                <li><button onclick="enrollUnit()">ICT club</button></li> 
+                <li><button onclick="enrollUnit()">Hospitality Club</button></li>
+                <li><button onclick="enrollUnit()">KIASCU</button></li>
+                <li> <button onclick="enrollUnit()">YCS KIAS</button></li> 
+                <li><button onclick="enrollUnit()">KIASSDA</button></li> 
+                <li><button onclick="enrollUnit()">Muslim Denomination</button></li> 
+                <li><button onclick="enrollUnit()">Hindu Denomination</button></li>
+                <li><button onclick="enrollUnit()">KIAS Football club</button></li>
+                <li> <button onclick="enrollUnit()">KIAS Basketball Club</button></li> 
+                <li><button onclick="enrollUnit()">KIAS RUGBY 7s</button></li> 
+                <li><button onclick="enrollUnit()">KIAS BADMINTON</button></li> 
+                <li><button onclick="enrollUnit()">TT KIAS</button></li>
+                <li><button onclick="enrollUnit()">LT KIAS</button></li>
+                <li> <button onclick="enrollUnit()">Volleyball KIAS</button></li> 
+                <li><button onclick="enrollUnit()">HANDBALL KIAS</button></li> 
+                <li><button onclick="enrollUnit()">KIAS FORENSIC CLUB</button></li> 
+               
+             </ul>
+             
+             </div>
+             
+                
+             </body>
+             
+        
+        
+        <div id="studentportal" class="content-section" style="display:none;">
+            <h2>Learning Management system</h2>
+            <p>Click the below link to navigate to E-learning system
+                
+            </p>
+            <a href="URL">www.kias.ac.ke</a>
+
+
+        </div>
+        <div id="mysubmissions" class="content-section" style="display:none;">
+            <h2>Results</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Semester</th>
+                        <th>Unit</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Course 1</td>
+                        <td>1</td>
+                        <td>Unit 1</td>
+                        <td>A</td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+        </div>
+        <div id="changePassword" class="content-section" style="display:none;">
+            <h2>Change Password</h2>
+            <form>
+                <label for="currentPassword">Current Password:</label>
+                <input type="password" id="currentPassword" required>
+                <label for="newPassword">New Password:</label>
+                <input type="password" id="newPassword" required>
+                <label for="confirmPassword">Confirm New Password:</label>
+                <input type="password" id="confirmPassword" required>
+                <button type="submit" onclick="changePassword()">Change Password</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="profile">
+        <div id="avatar" class="avatar"></div>
+        <span id="studentName">Kipyegon Siele</span>
+    </div>
+
+    <script>
+        // Assume we have student data
+        var student = {
+            name: "Kipyegon Siele",
+            profilePic: "" // If no profile picture, this will be an empty string
+        };
+
+        function updateAvatar() {
+            var avatar = document.getElementById('avatar');
+            if (student.profilePic) {
+                avatar.innerHTML = `<img src="${student.profilePic}" alt="Profile Picture" class="profile-pic">`;
+            } else {
+                var initials = student.name.split(' ').map(word => word[0]).join('');
+                avatar.textContent = initials;
+            }
+        }
+
+        function togglePersonalDetails() {
+            var personalDetails = document.getElementById('personalDetails');
+            personalDetails.style.display = personalDetails.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Event listener for avatar click
+        document.getElementById('avatar').addEventListener('click', togglePersonalDetails);
+
+        // Update the avatar on page load
+        updateAvatar();
+
+        function showContent(sectionId) {
+            var sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+            
+        }
+    </script>
+   <body>
+    
+    <script> function enrollUnit(sectionId) { alert("Unit successfully enrolled"); } </script> </body> </html>
+</body>
+</html>
+<script>// scripts.js
+
+    function shrinkContainers(week) {
+        const containers = document.querySelectorAll('.small-container');
+        containers.forEach(container => {
+            container.classList.add('shrink');
+        });
+        loadContent(week);
+    
+}
+ 
+    function loadContent(week) {
+        let content = '';
+    
+        if (week === 'MATHEMATICS') {
+            content = `
+                <h2>MATHEMATICS</h2>
+                <p>Subject Outline: Introduction to AI</p>
+                <p>Progress: 20%</p>
+                <p>Notes: <a href="week1_notes.pdf" download>Download Notes</a></p>
+                <p>Assignments: Assignment 1</p>
+                <p>Cats: CAT 1</p>
+            `;
+        } else if (week === 'HOSPITAL ENGINEERING') {
+            content = `
+                <h2>HOSPITAL ENGINEERING</h2>
+                <p>Subject Outline: Data Science Basics</p>
+                <p>Progress: 40%</p>
+                <p>Notes: <a href="week2_notes.pdf" download>Download Notes</a></p>
+                <p>Assignments: Assignment 2</p>
+                <p>Cats: CAT 2</p>
+            `;
+        } else if (week === 'HUMAN ANATOMY AND PHYSIOLOGY') {
+            content = `
+                <h2>HUMAN ANATOMY AND PHYSIOLOGY</h2>
+                <p>Subject Outline: Machine Learning</p>
+                <p>Progress: 60%</p>
+                <p>Notes: <a href="week3_notes.pdf" download>Download Notes</a></p>
+                <p>Assignments: Assignment 3</p>
+                <p>Cats: CAT 3</p>
+            `;
+        } else if (week === 'week4') {
+            content = `
+                <h2>INFORMATION AND COMMUNICATION TECHNOLOGY</h2>
+                <p>Subject Outline: Deep Learning</p>
+                <p>Progress: 80%</p>
+                <p>Notes: <a href="week4_notes.pdf" download>Download Notes</a></p>
+                <p>Assignments: Assignment 4</p>
+                <p>Cats: CAT 4</p>
+            `;
+        } else if (week === 'INDUSTRIAL ORGANIZATION MANAGEMENT') {
+            content = `
+                <h2>INDUSTRIAL ORGANIZATION MANAGEMENT</h2>
+                <p>Subject Outline: Natural Language Processing</p>
+                <p>Progress: 100%</p>
+                <p>Notes: <a href="week5_notes.pdf" download>Download Notes</a></p>
+                <p>Assignments: Assignment 5</p>
+                <p>Cats: CAT 5</p>
+            `;
+        } else if (week === 'RESEARCH METHODS') {
+            content = `
+                <h2>RESEARCH METHODS</h2>
+                <p>Subject Outline: AI Ethics</p>
+                <p>Progress: 120%</p>
+                <p>Notes: <a href="week6_notes.pdf" download>Download Notes</a></p>
+                <p>Assignments: Assignment 6</p>
+                <p>Cats: CAT 6</p>
+            `;
+        }
+    
+        document.getElementById('main-content').innerHTML = content;
+    }
+    </script>
